@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carta Secreta 💌</title>
+
+  <style>
+    :root {
+      --bg1: #ffe6ee;
+      --bg2: #fff5f8;
+      --bg3: #ffeef4;
+      --primary: #c44569;
+      --primary-dark: #a92f53;
+      --text: #5a2a37;
+      --muted: #7d4b5c;
+      --card: rgba(255, 255, 255, 0.82);
+      --border: rgba(255, 255, 255, 0.9);
+      --shadow: 0 18px 40px rgba(124, 45, 74, 0.14);
+      --shadow-strong: 0 22px 48px rgba(124, 45, 74, 0.22);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+      background: linear-gradient(-45deg, var(--bg1), var(--bg2), var(--bg3), #fff1f6);
+      background-size: 400% 400%;
+      animation: fundoAnimado 14s ease infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: var(--text);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    @keyframes fundoAnimado {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      filter: blur(65px);
+      opacity: 0.35;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body::before {
+      top: -70px;
+      left: -70px;
+      background: rgba(255, 180, 210, 0.7);
+      animation: blob1 10s ease-in-out infinite alternate;
+    }
+
+    body::after {
+      bottom: -80px;
+      right: -70px;
+      background: rgba(255, 205, 225, 0.8);
+      animation: blob2 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes blob1 {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(60px, 40px) scale(1.15); }
+    }
+
+    @keyframes blob2 {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(-55px, -35px) scale(1.18); }
+    }
+
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .heart-float {
+      position: absolute;
+      bottom: -30px;
+      opacity: 0;
+      animation: subir linear forwards;
+    }
+
+    @keyframes subir {
+      0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-110vh) scale(1.3);
+        opacity: 0;
+      }
+    }
+
+    .container {
+      width: 100%;
+      max-width: 760px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      padding: 36px 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      animation: flutuar 4s ease-in-out infinite;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -120%;
+      left: -30%;
+      width: 60%;
+      height: 300%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.28), transparent);
+      transform: rotate(18deg);
+      animation: brilho 7s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes brilho {
+      from { transform: translateX(-120%) rotate(18deg); }
+      to { transform: translateX(220%) rotate(18deg); }
+    }
+
+    @keyframes flutuar {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .icon-heart {
+      font-size: 2rem;
+      display: inline-block;
+      margin-bottom: 10px;
+      animation: pulse 2s ease-in-out infinite;
+      filter: drop-shadow(0 4px 10px rgba(196, 69, 105, 0.2));
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin-bottom: 10px;
+      color: var(--primary);
+      text-shadow: 0 2px 0 rgba(255,255,255,0.8);
+    }
+
+    .subtitle {
+      font-size: 1.02rem;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 24px;
+    }
+
+    .btn {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #d6547b, var(--primary));
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 14px 28px rgba(196, 69, 105, 0.22);
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 120%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      transition: 0.6s;
+    }
+
+    .btn:hover::before {
+      left: 120%;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 18px 32px rgba(196, 69, 105, 0.3);
+    }
+
+    .secret-letter {
+      display: none;
+      margin-top: 26px;
+      text-align: left;
+      background: rgba(255, 250, 252, 0.96);
+      border: 1px solid rgba(196, 69, 105, 0.15);
+      border-radius: 26px;
+      padding: 28px 22px;
+      line-height: 1.95;
+      box-shadow: 0 14px 32px rgba(124, 45, 74, 0.1);
+      animation: abrirCarta 0.8s ease;
+    }
+
+    @keyframes abrirCarta {
+      from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .secret-letter h2 {
+      text-align: center;
+      color: #b3395a;
+      margin-bottom: 18px;
+      font-size: 1.6rem;
+    }
+
+    .secret-letter h2::after {
+      content: "";
+      display: block;
+      width: 70px;
+      height: 4px;
+      margin: 10px auto 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+
+    .secret-letter p {
+      margin-bottom: 14px;
+      color: var(--text);
+      font-size: 1.04rem;
+    }
+
+    .assinatura {
+      text-align: right;
+      margin-top: 22px;
+      font-weight: bold;
+      color: var(--primary-dark);
+      line-height: 1.7;
+    }
+
+    .letter-actions {
+      margin-top: 22px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.95);
+      color: var(--primary);
+      border: 1px solid rgba(196, 69, 105, 0.18);
+      box-shadow: 0 10px 22px rgba(124, 45, 74, 0.08);
+    }
+
+    .btn-secondary::before {
+      background: linear-gradient(90deg, transparent, rgba(196,69,105,0.12), transparent);
+    }
+
+    .hint {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 28px 16px;
+        border-radius: 24px;
+      }
+
+      .secret-letter {
+        padding: 22px 16px;
+      }
+
+      .letter-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <audio id="musica" autoplay loop playsinline style="display: none;">
+  <source src="alianca.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  window.addEventListener("load", async () => {
+    const musica = document.getElementById("musica");
+
+    try {
+      await musica.play();
+    } catch (erro) {
+      console.log("Autoplay bloqueado pelo navegador.");
+    }
+  });
+</script>
+  <div class="hearts" id="hearts"></div>
+
+  <div class="container">
+    <div class="card">
+      <span class="icon-heart">💌</span>
+      <h1>Carta Secreta</h1>
+      <p class="subtitle">
+        Tem um pedacinho do meu coração guardado aqui. 
+
+      <button class="btn" id="btnAbrir" onclick="abrirCarta()">Abrir carta secreta</button>
+
+      <div class="secret-letter" id="carta">
+        <h2>Para você, meu amor</h2>
+
+        <p>
+          Nada que vc viu foi o chatgpt que fez, foi tudo eu, as unicas coisas que foi o chat foram as animaçoes na pagina principal, todo o resto fiz a mao, amor, fiz essa carta pensando em cada detalhe, cada palavra, cada sentimento que eu queria te passar. É um pedacinho do que eu sinto por você, guardado aqui, só pra você.
+          foram das 17h do dia 20 ate as 2:30 do dia 21 fazendo o codigo,reelendo os textos, foram quase 2 mil linhas de codigo, escolhendo musica e escrevendo cada palavra,editando as fotos na ia, pensando em cada detalhe, pra que quando vc lesse isso aqui, vc pudesse sentir um pouquinho do que eu sinto por vc, e o quanto vc é importante pra mim.
+          mal consegui dormir essa noite porque estou com medo de voce nao gostar,me desculpa caso tenha falado alguma besteira tambem, espero que vc sinta o quanto eu te amo, o quanto vc é importante pra mim, o quanto eu sou grato por ter vc na minha vida, e o quanto eu quero passar minha vida inteira com vc. 
+          e se vc leu tudo isso aqui, até esse ponto, então eu só quero te agradecer por ser essa pessoa incrível, por ser essa pessoa que me faz tão feliz, por ser essa pessoa que eu amo tanto
+          Olivia.
+        </p>
+
+        <p>
+          As vezes eu sou meio inseguro sabe mas nem te falo porque nao quero parecer fraco ou algo assim, mas eu tenho muito medo de te perder, medo de nao ser o suficiente pra vc, medo de nao conseguir te dar o que vc merece,
+          meu problema pra conversar é que eu tenho muito medo de estar sendo enganado nao porque acho que vc faria isso mas eu sempre pensei assim, nao so com vc, entao as vezes eu fico travado pra falar o que sinto quando acontece algo
+          mas como ja falei na cartinha eu vou fazer o que for preciso pra te deixar feliz e se isso for ser mais aberto e falar mais sobre o que eu sinto, eu vou fazer isso, 
+          Eu quero passar o resto da minha vida te amando e te fazendo feliz. Em qualquer
+          universo, em qualquer vida, eu escolheria você.
+        </p>
+
+
+
+        <div class="letter-actions">
+          <button class="btn btn-secondary" onclick="window.location.href='bom.html'">
+            Voltar pra carta principal
+          </button>
+        </div>
+
+        <div class="assinatura">
+        
+          Com amor, 
+          Seu bb ❤️
+        </div>
+      </div>
+
+      <p class="hint">Feito para minha vida</p>
+    </div>
+  </div>
+
+  <script>
+    function abrirCarta() {
+      const carta = document.getElementById("carta");
+      const botao = document.getElementById("btnAbrir");
+
+      carta.style.display = "block";
+      botao.style.display = "none";
+    }
+
+    const heartsContainer = document.getElementById("hearts");
+    const simbolos = ["❤", "💖", "💕", "💗", "💘", "✨"];
+
+    function criarCoracao() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart-float");
+      heart.textContent = simbolos[Math.floor(Math.random() * simbolos.length)];
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = 12 + Math.random() * 22 + "px";
+      heart.style.animationDuration = 8 + Math.random() * 6 + "s";
+
+      heartsContainer.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 14000);
+    }
+
+    setInterval(criarCoracao, 550);
+  </script>
+</body>
+</html>

@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loml</title>
+  <link rel="icon" type="image/jpeg" href="snoppey.jpg" />
+
+  <style>
+    :root {
+      --bg1: #fff0f5;
+      --bg2: #ffe4ec;
+      --bg3: #fff7fa;
+      --primary: #c44569;
+      --primary-dark: #a53153;
+      --text: #5b2b38;
+      --muted: #7f4b5c;
+      --card: rgba(255, 255, 255, 0.78);
+      --card-border: rgba(255, 255, 255, 0.9);
+      --shadow: 0 20px 45px rgba(124, 45, 74, 0.13);
+      --shadow-hover: 0 24px 55px rgba(124, 45, 74, 0.2);
+      --radius: 30px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      background: linear-gradient(-45deg, var(--bg1), var(--bg2), var(--bg3), #ffeaf2);
+      background-size: 400% 400%;
+      animation: gradientFlow 14s ease infinite;
+      position: relative;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      filter: blur(70px);
+      z-index: 0;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    body::before {
+      top: -80px;
+      left: -80px;
+      background: rgba(255, 180, 210, 0.75);
+      animation: blob1 12s ease-in-out infinite alternate;
+    }
+
+    body::after {
+      right: -100px;
+      bottom: -80px;
+      background: rgba(255, 210, 230, 0.8);
+      animation: blob2 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes blob1 {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(80px, 50px) scale(1.2); }
+    }
+
+    @keyframes blob2 {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(-70px, -50px) scale(1.18); }
+    }
+
+    .progress-wrap {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: rgba(255,255,255,0.25);
+      z-index: 50;
+      backdrop-filter: blur(6px);
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff87ad, #c44569, #ffb3cb);
+      box-shadow: 0 0 18px rgba(196, 69, 105, 0.35);
+      transition: width 0.08s linear;
+    }
+
+    .hearts,
+    .sparkles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .heart,
+    .sparkle {
+      position: absolute;
+      bottom: -40px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .heart {
+      animation: floatUp linear forwards;
+    }
+
+    .sparkle {
+      animation: sparkleUp linear forwards;
+      color: rgba(255,255,255,0.95);
+      text-shadow: 0 0 10px rgba(255,255,255,0.9);
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.8) rotate(0deg);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.35;
+      }
+      100% {
+        transform: translateY(-110vh) scale(1.35) rotate(12deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes sparkleUp {
+      0% {
+        transform: translateY(0) scale(0.6);
+        opacity: 0;
+      }
+      20% {
+        opacity: 0.5;
+      }
+      100% {
+        transform: translateY(-105vh) scale(1.1);
+        opacity: 0;
+      }
+    }
+
+    .page {
+      position: relative;
+      z-index: 2;
+      width: min(1120px, 92%);
+      margin: 0 auto;
+      padding: 34px 0 80px;
+    }
+
+    .hero {
+      text-align: center;
+      padding-top: 18px;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 36px;
+      box-shadow: var(--shadow);
+      padding: 42px 28px;
+      animation: heroFloat 4s ease-in-out infinite;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -120% -20%;
+      background: linear-gradient(
+        120deg,
+        transparent 35%,
+        rgba(255,255,255,0.28) 50%,
+        transparent 65%
+      );
+      transform: rotate(10deg);
+      animation: shineHero 7s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shineHero {
+      from { transform: translateX(-60%) rotate(10deg); }
+      to { transform: translateX(60%) rotate(10deg); }
+    }
+
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .title-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .title-wrap h1 {
+      font-size: clamp(2.3rem, 6vw, 4.3rem);
+      color: var(--primary);
+      line-height: 1.08;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.9), 0 0 25px rgba(196, 69, 105, 0.18);
+      animation: pulseTitle 2.8s ease-in-out infinite;
+    }
+
+    @keyframes pulseTitle {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.015); }
+    }
+
+    .title-wrap img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      animation: bounceHeart 2s ease-in-out infinite;
+      filter: drop-shadow(0 4px 10px rgba(196, 69, 105, 0.25));
+    }
+
+    @keyframes bounceHeart {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(-6deg); }
+    }
+
+    .counter-box {
+      display: inline-block;
+      margin: 8px 0 22px;
+      padding: 15px 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(196, 69, 105, 0.14);
+      box-shadow: 0 12px 28px rgba(196, 69, 105, 0.08);
+      animation: counterGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes counterGlow {
+      0%, 100% { box-shadow: 0 12px 28px rgba(196, 69, 105, 0.08); }
+      50% { box-shadow: 0 14px 32px rgba(196, 69, 105, 0.18); }
+    }
+
+    .counter-box h2 {
+      font-size: 1rem;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+
+    #contador-amor {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .hero-text {
+      max-width: 780px;
+      margin: 0 auto;
+      line-height: 1.95;
+      font-size: clamp(1rem, 2vw, 1.13rem);
+    }
+
+    .badge {
+      margin-top: 26px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(196, 69, 105, 0.12);
+      border-radius: 24px;
+      padding: 20px 18px;
+      min-width: min(100%, 500px);
+      box-shadow: 0 12px 25px rgba(196, 69, 105, 0.08);
+    }
+
+    .love-btn,
+    .secret-btn,
+    .btn-top {
+      border: none;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+    }
+
+    .love-btn {
+      position: relative;
+      overflow: hidden;
+      padding: 14px 24px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #d6547b, var(--primary));
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      box-shadow: 0 14px 28px rgba(196, 69, 105, 0.22);
+    }
+
+    .love-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 120%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: 0.6s;
+    }
+
+    .love-btn:hover::before {
+      left: 120%;
+    }
+
+    .love-btn:hover,
+    .secret-btn:hover,
+    .btn-top:hover {
+      transform: translateY(-4px) scale(1.02);
+    }
+
+    #frase-surpresa {
+      font-size: 1.06rem;
+      color: var(--muted);
+      min-height: 28px;
+      transition: 0.3s;
+    }
+
+    .section {
+      margin-top: 28px;
+    }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 32px 26px;
+      box-shadow: var(--shadow);
+      transition: 0.35s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .section-title {
+      font-size: clamp(1.45rem, 3vw, 2rem);
+      margin-bottom: 18px;
+      color: #b3395a;
+      text-align: center;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 70px;
+      height: 4px;
+      margin: 10px auto 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+
+    .love-letter {
+      max-width: 840px;
+      margin: 0 auto;
+      text-align: center;
+      line-height: 1.95;
+      font-size: 1.07rem;
+    }
+
+    .love-letter p + p {
+      margin-top: 16px;
+    }
+
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .quote-card {
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 249, 251, 0.97);
+      border: 1px solid rgba(196, 69, 105, 0.1);
+      border-radius: 22px;
+      padding: 20px 18px;
+      box-shadow: 0 12px 24px rgba(124, 45, 74, 0.08);
+      transition: 0.3s ease;
+      text-align: center;
+    }
+
+    .quote-card::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-size: 1rem;
+      opacity: 0.6;
+    }
+
+    .quote-card:hover {
+      transform: translateY(-6px) rotate(-1deg);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .quote-card p {
+      line-height: 1.8;
+    }
+
+    .gallery-section {
+      display: grid;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .gallery-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .photo {
+      position: relative;
+      overflow: hidden;
+      background: white;
+      border-radius: 26px;
+      box-shadow: 0 16px 30px rgba(124, 45, 74, 0.12);
+      transition: 0.35s ease;
+      transform-style: preserve-3d;
+    }
+
+    .photo::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.12), transparent 35%);
+      opacity: 0;
+      transition: 0.3s;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .photo:hover {
+      transform: translateY(-7px) scale(1.015);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .photo:hover::before {
+      opacity: 1;
+    }
+
+    .photo img {
+      width: 100%;
+      height: 560px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.45s ease;
+    }
+
+    .photo:hover img {
+      transform: scale(1.05);
+    }
+
+    .photo span {
+      position: relative;
+      z-index: 2;
+      display: block;
+      padding: 15px 14px 17px;
+      text-align: center;
+      font-weight: 700;
+      color: #7a3248;
+      background: linear-gradient(to bottom, #fff, #fff8fb);
+    }
+
+    .final-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .final-card::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: inherit;
+      padding: 2px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(196, 69, 105, 0.35), rgba(255,255,255,0.7));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .final-message {
+      text-align: center;
+      font-size: 1.28rem;
+      font-weight: 700;
+      line-height: 1.8;
+      color: var(--primary-dark);
+      animation: finalPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes finalPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.015); }
+    }
+
+    .secret-link-wrap {
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    .secret-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: rgba(255,255,255,0.95);
+      color: var(--primary);
+      border: 1px solid rgba(196, 69, 105, 0.18);
+      border-radius: 999px;
+      padding: 14px 26px;
+      font-weight: 700;
+      box-shadow: 0 12px 24px rgba(124, 45, 74, 0.09);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 32px;
+      color: var(--muted);
+      font-size: 1rem;
+      animation: fadeSoft 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes fadeSoft {
+      from { opacity: 0.75; }
+      to { opacity: 1; }
+    }
+
+    .btn-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d6547b, var(--primary));
+      color: white;
+      font-size: 20px;
+      box-shadow: 0 14px 28px rgba(196, 69, 105, 0.24);
+      z-index: 20;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .btn-top.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .audio-hidden {
+      display: none;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px) scale(0.98);
+      transition: 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    @media (max-width: 900px) {
+      .photo img {
+        height: 420px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .page {
+        width: min(94%, 1100px);
+        padding-top: 24px;
+      }
+
+      .hero-card,
+      .card {
+        padding: 24px 18px;
+      }
+
+      .gallery-row {
+        grid-template-columns: 1fr;
+      }
+
+      .photo img {
+        height: 320px;
+      }
+
+      .badge {
+        min-width: 100%;
+      }
+
+      .title-wrap img {
+        width: 44px;
+        height: 44px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="hearts" id="hearts"></div>
+  <div class="sparkles" id="sparkles"></div>
+
+  <audio id="musica" loop autoplay playsinline class="audio-hidden">
+    <source src="musica.mp3" type="audio/mpeg" />
+    Seu navegador não suporta áudio.
+  </audio>
+  <script>
+  window.addEventListener("load", async () => {
+    const musica = document.getElementById("musica");
+
+    try {
+      await musica.play();
+    } catch (erro) {
+      console.log("Autoplay bloqueado pelo navegador.");
+    }
+  });
+</script>
+
+  <main class="page">
+    <section class="hero reveal">
+      <div class="hero-card">
+        <div class="title-wrap">
+          <h1>Pra você, amor da minha vida</h1>
+          <img src="coracao.png" alt="Coração" />
+        </div>
+
+        <div class="counter-box">
+          <h1 class="section-title">Desde que você chegou</h1>
+          <p id="contador-amor"></p>
+        </div>
+
+        <p class="hero-text">
+          Olivia tudo que eu quero é ter sua companhia pra sempre, amo seu jeito de ser e tudo
+          que vc significa pra mim, eu sinto uma conexão tao forte com vc sinto que a gente combina demais e acho isso tao gostoso de sentir,
+           ver que eu e vc batemos, chega a ser ate estranho as vezes pra mim
+           muito obrigado por me fazer melhorar como pessoa, namorado e aluno, obrigado pelas conversas, pelas piadas, pelos beijos, pelos abraços,
+          cafunes. Quando te vejo meu dia melhora, quando rimos juntos faz meu mês. Voce é
+          muito especial pra mim, amo seu olhar seu sorriso sua cintura sua boca seus cabelos
+           amo vc toda, por vc eu faria de tudo, pra te ver eu faria de tudo é ate dificil expressar pra vc o tamanho do carinho que sinto por vc.
+
+          Tudo que eu mais quero é que a gente dê certo e fique junto
+          pra sempre, quero viver com vc, para fazer muitas viagens, a vida ao seu lado é mais leve essa é a verdade.
+        </p>
+
+        <div class="badge">
+          <button class="love-btn" onclick="mostrarFrase()">Clica aqui mais de uma vez</button>
+          <p id="frase-surpresa"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="card">
+        <h2 class="section-title">Minha princesa Padmé</h2>
+        <div class="love-letter">
+          <p>
+            Me perdoa pelas vezes que sou ignorante, sou grosso, chato, me perdoa por não ser
+            perfeito, pelas vezes que prometo que vou assistir algo e nao assisto, quando prometo e nao cumpro, nao sou assim porque nao te amo eu nao gosto de voce,
+             eu sou assim porque as vezes eu sou meio perdido, as vezes eu me sinto inseguro, as vezes eu me sinto incapaz de te fazer feliz, Mas
+            mesmo sendo assim eu te amo, e to completamente disposto a mudar o que for preciso. Tudo que
+            eu quero é te ver feliz, sempre o que estiver ao meu alcance eu vou fazer pra poder tentar te alegrar pelo menos um pouco, quero 
+            poder somar na sua vida,ser um decrescimo.
+          </p>
+          <p>
+            Quero ser quem te apoia, te ajuda, seu porto seguro. Quero um dia morar com vc,
+            termos nossos filhos e poder contar pra eles nossa história de amor, ser um
+            casal exemplar e uma família exemplar. E com vc eu vejo que posso ter
+            tudo isso.
+          </p>
+          <p>
+            Eu te amo muito, Olivia. Sou muito grato e muito sortudo por ter vc comigo, sortudo de te amar, de ser
+            seu companheiro, seu amigo, de ter vc na minha vida. voce me faz feliz.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="card">
+        <h2 class="section-title">Lovely Quotes</h2>
+        <div class="quotes-grid">
+          <div class="quote-card">
+            <p>"I truly, deeply love you, and before we die, I want you to know that." — Padmé</p>
+          </div>
+          <div class="quote-card">
+            <p>"When I'm near you, my mind is no longer my own." — Anakin</p>
+          </div>
+          <div class="quote-card">
+            <p>"I feel stronger when you're around, anyway." — Lois Lane</p>
+          </div>
+          <div class="quote-card">
+            <p>"All I know is that my perfect place is here, with you." — Clark Kent</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="card">
+        <h2 class="section-title">Olivia & Pedro</h2>
+
+        <div class="gallery-section">
+          <div class="gallery-row">
+            <div class="photo">
+              <img src="foto1.png" alt="Nossa foto 1" />
+              <span>Amo seu beijo ❤️</span>
+            </div>
+
+            <div class="photo">
+              <img src="foto3.jpg" alt="Nossa foto 2" />
+              <span>Nos em Gotham 🦇</span>
+            </div>
+          </div>
+
+          <div class="gallery-row">
+            <div class="photo">
+              <img src="foto2.jpg" alt="Nossa foto 3" />
+              <span>Nos em outra galáxia 🌑</span>
+            </div>
+
+            <div class="photo">
+              <img src="foto4.jpg" alt="Nossa foto 4" />
+              <span>Nos em Londres 🔎</span>
+            </div>
+          </div>
+
+          <div class="gallery-row">
+            <div class="photo">
+              <img src="foto5.jpeg" alt="Nossa foto 5" />
+              <span>Minha melhor amiga 💗</span>
+            </div>
+
+            <div class="photo">
+              <img src="foto6.jpeg" alt="Nossa foto 6" />
+              <span>Minha companheira 💖</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="card final-card">
+        <h2 class="section-title">Pra sempre vc ❤️</h2>
+        <p class="final-message">
+          Em qualquer universo, em qualquer vida, eu escolho vc.
+        </p>
+
+        <div class="secret-link-wrap">
+          <a class="secret-btn" href="carta_sec.html">Abrir carta secreta ✨</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      Feito com amor pepe
+    </footer>
+  </main>
+
+  <button class="btn-top" id="btnTop" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">↑</button>
+
+  <script>
+    const frasesSurpresa = [
+      "Vc é a melhor parte dos meus dias",
+      "Seu abraço é um dos meus lugares favoritos",
+      "Eu escolheria vc mil vezes",
+      "Vc me faz querer ser melhor",
+      "Com vc, tudo fica mais bonito",
+      "Seu sorriso melhora qualquer dia meu",
+      "Eu amo dividir a vida com você",
+      "Você é meu amor, minha paz e minha melhor companhia",
+      "Cada momento com vc é muito especial pra mim",
+      "Eu te amo mais do que eu tenho capacidade de expressar",
+      "Me sinto muito bem quando estou com vc, é como se tudo ficasse mais leve e mais feliz",
+      "eu sempre vou estar aqui para vc",
+      "tudo que vc precisar eu vou fazer o possível para te ajudar",
+      "eu te amo muito, muito mesmo, e quero passar minha vida inteira com vc",
+      "estou aqui pra ser um ombro amigo, um apoio, um companheiro, um namorado, um marido, um pai, o que vc precisar que eu seja pra vc",
+    ];
+
+    function mostrarFrase() {
+      const frase = frasesSurpresa[Math.floor(Math.random() * frasesSurpresa.length)];
+      const alvo = document.getElementById("frase-surpresa");
+      alvo.style.opacity = "0";
+      setTimeout(() => {
+        alvo.textContent = frase;
+        alvo.style.opacity = "1";
+      }, 160);
+    }
+
+    const dataInicio = new Date("2025-11-14");
+    const hoje = new Date();
+    const diff = hoje - dataInicio;
+    const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    document.getElementById("contador-amor").textContent =
+      `Já faz ${dias} dias que você deixa minha vida mais feliz.`;
+
+    const heartsContainer = document.getElementById("hearts");
+    const sparklesContainer = document.getElementById("sparkles");
+    const heartSymbols = ["❤", "💖", "💕", "💗", "💘"];
+    const sparkleSymbols = ["✦", "✧", "⋆", "✨"];
+
+    function criarCoracao() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = 14 + Math.random() * 26 + "px";
+      heart.style.animationDuration = 8 + Math.random() * 6 + "s";
+      heartsContainer.appendChild(heart);
+      setTimeout(() => heart.remove(), 14000);
+    }
+
+    function criarBrilho() {
+      const sparkle = document.createElement("div");
+      sparkle.classList.add("sparkle");
+      sparkle.textContent = sparkleSymbols[Math.floor(Math.random() * sparkleSymbols.length)];
+      sparkle.style.left = Math.random() * 100 + "vw";
+      sparkle.style.fontSize = 10 + Math.random() * 14 + "px";
+      sparkle.style.animationDuration = 6 + Math.random() * 6 + "s";
+      sparklesContainer.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 12000);
+    }
+
+    setInterval(criarCoracao, 500);
+    setInterval(criarBrilho, 700);
+
+    const revealElements = document.querySelectorAll(".reveal");
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    }, { threshold: 0.14 });
+
+    revealElements.forEach((el) => revealObserver.observe(el));
+
+    const progressBar = document.getElementById("progressBar");
+    const btnTop = document.getElementById("btnTop");
+
+    function atualizarProgresso() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + "%";
+
+      if (scrollTop > 280) {
+        btnTop.classList.add("show");
+      } else {
+        btnTop.classList.remove("show");
+      }
+    }
+
+    window.addEventListener("scroll", atualizarProgresso);
+    atualizarProgresso();
+
+    window.addEventListener("load", async () => {
+      const musica = document.getElementById("musica");
+      try {
+        await musica.play();
+      } catch (erro) {
+        console.log("Autoplay bloqueado pelo navegador.");
+      }
+    });
+  </script>
+</body>
+</html>
