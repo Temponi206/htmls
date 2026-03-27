@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carta Secreta 💌</title>
+  <title>Loml</title>
+  <link rel="icon" type="image/jpeg" href="snoppey.jpg" />
 
   <style>
     :root {
@@ -324,21 +325,6 @@
   </style>
 </head>
 <body>
-  <audio id="musica" autoplay loop playsinline style="display: none;">
-  <source src="alianca.mp3" type="audio/mpeg">
-</audio>
-
-<script>
-  window.addEventListener("load", async () => {
-    const musica = document.getElementById("musica");
-
-    try {
-      await musica.play();
-    } catch (erro) {
-      console.log("Autoplay bloqueado pelo navegador.");
-    }
-  });
-</script>
   <div class="hearts" id="hearts"></div>
 
   <div class="container">
@@ -352,10 +338,42 @@
 
       <div class="secret-letter" id="carta">
         <h2>Para você, meu amor</h2>
+        <audio id="musica" loop style="display: none;">
+  <source src="alianca.mp3" type="audio/mpeg">
+  Seu navegador não suporta áudio.
+</audio>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <button class="btn-musica" onclick="tocarMusica()">Clique aqui amor</button>
+</div>
+
+<style>
+  .btn-musica {
+    background: #c44569;
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(196, 69, 105, 0.2);
+  }
+
+  .btn-musica:hover {
+    transform: translateY(-2px);
+  }
+</style>
+
+<script>
+  function tocarMusica() {
+    const musica = document.getElementById("musica");
+    musica.play();
+  }
+</script>
 
         <p>
           Nada que vc viu foi o chatgpt que fez, foi tudo eu, as unicas coisas que foi o chat foram as animaçoes na pagina principal, todo o resto fiz a mao, amor, fiz essa carta pensando em cada detalhe, cada palavra, cada sentimento que eu queria te passar. É um pedacinho do que eu sinto por você, guardado aqui, só pra você.
-          foram das 17h do dia 20 ate as 2:30 do dia 21 fazendo o codigo,reelendo os textos, foram quase 2 mil linhas de codigo, escolhendo musica e escrevendo cada palavra,editando as fotos na ia, pensando em cada detalhe, pra que quando vc lesse isso aqui, vc pudesse sentir um pouquinho do que eu sinto por vc, e o quanto vc é importante pra mim.
+          foram das 17h do dia 20 ate as 4:30 do dia 21 fazendo o codigo,reelendo os textos, foram quase 2 mil linhas de codigo, escolhendo musica e escrevendo cada palavra,editando as fotos na ia, pensando em cada detalhe, pra que quando vc lesse isso aqui, vc pudesse sentir um pouquinho do que eu sinto por vc, e o quanto vc é importante pra mim.
           mal consegui dormir essa noite porque estou com medo de voce nao gostar,me desculpa caso tenha falado alguma besteira tambem, espero que vc sinta o quanto eu te amo, o quanto vc é importante pra mim, o quanto eu sou grato por ter vc na minha vida, e o quanto eu quero passar minha vida inteira com vc. 
           e se vc leu tudo isso aqui, até esse ponto, então eu só quero te agradecer por ser essa pessoa incrível, por ser essa pessoa que me faz tão feliz, por ser essa pessoa que eu amo tanto
           Olivia.

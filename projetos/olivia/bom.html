@@ -634,21 +634,7 @@
   <div class="hearts" id="hearts"></div>
   <div class="sparkles" id="sparkles"></div>
 
-  <audio id="musica" loop autoplay playsinline class="audio-hidden">
-    <source src="musica.mp3" type="audio/mpeg" />
-    Seu navegador não suporta áudio.
-  </audio>
-  <script>
-  window.addEventListener("load", async () => {
-    const musica = document.getElementById("musica");
-
-    try {
-      await musica.play();
-    } catch (erro) {
-      console.log("Autoplay bloqueado pelo navegador.");
-    }
-  });
-</script>
+  
 
   <main class="page">
     <section class="hero reveal">
@@ -656,6 +642,41 @@
         <div class="title-wrap">
           <h1>Pra você, amor da minha vida</h1>
           <img src="coracao.png" alt="Coração" />
+        </div>
+        <div class="page">
+          <audio id="musica" loop style="display: none;">
+  <source src="musica.mp3" type="audio/mpeg">
+  Seu navegador não suporta áudio.
+</audio>
+
+<button class="btn-musica" onclick="tocarMusica()">Clica aqui bb</button>
+
+<style>
+  .btn-musica {
+    background: #c44569;
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(196, 69, 105, 0.2);
+  }
+
+  .btn-musica:hover {
+    transform: translateY(-2px);
+  }
+</style>
+
+<script>
+  function tocarMusica() {
+    const musica = document.getElementById("musica");
+    musica.play();
+  }
+</script>
+          
+
+
         </div>
 
         <div class="counter-box">
